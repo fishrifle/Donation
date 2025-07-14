@@ -23,7 +23,7 @@ export default function BankClient() {
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [isSubscription, setIsSubscription] = useState(false);
   const params = useSearchParams();
-  const router = useRouter()
+  
 
   const amt = parseInt(params?.get("amt") ?? "0", 10) || 0;
   const monthly = params?.get("monthly") === "true";
