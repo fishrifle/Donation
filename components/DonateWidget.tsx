@@ -1,7 +1,7 @@
 // components/DonateWidget.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import DonationLanding from "./DonationLanding";
 
@@ -13,6 +13,12 @@ export default function DonateWidget({
   initialOpen = false,
 }: DonateWidgetProps) {
   const [open, setOpen] = useState(initialOpen);
+  const [isEmbedded, setIsEmbedded] = useState(false);
+
+  // Detect if we're running in an iframe (embedded)
+  useEffect(() => {
+    setIsEmbedded(window.parent !== window);
+  }, []);
 
   // If initialOpen is true, hide the pill button permanently
   const showPill = !initialOpen;
@@ -57,13 +63,15 @@ export default function DonateWidget({
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6"
             >
-              <button
-                onClick={() => setOpen(false)}
-                className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl cursor-pointer"
-                aria-label="Close"
-              >
-                ×
-              </button>
+              {!isEmbedded && (
+                <button
+                  onClick={() => setOpen(false)}
+                  className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 text-2xl cursor-pointer"
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+              )}
               <DonationLanding />
             </motion.div>
           </motion.div>

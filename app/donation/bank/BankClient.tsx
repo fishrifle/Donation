@@ -13,6 +13,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import BackButton from "@/components/BackButton";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useHeightMonitor } from "@/hooks/useHeightMonitor";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
@@ -23,7 +24,7 @@ export default function BankClient() {
   const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
   const [isSubscription, setIsSubscription] = useState(false);
   const params = useSearchParams();
-  
+  // const router = useRouter()
 
   const amt = parseInt(params?.get("amt") ?? "0", 10) || 0;
   const monthly = params?.get("monthly") === "true";
@@ -95,6 +96,9 @@ function BankForm({
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
+  
+  // Monitor height changes and notify parent window
+  const containerRef = useHeightMonitor<HTMLFormElement>([stripe, elements]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,7 +131,7 @@ function BankForm({
           } else {
             toast.error("Failed to confirm subscription.");
           }
-        } catch  {
+        } catch (error) {
           toast.error("Failed to confirm subscription.");
         }
       }
@@ -149,6 +153,7 @@ function BankForm({
 
   return (
     <form
+      ref={containerRef}
       onSubmit={handleSubmit}
       className="max-w-md mx-auto p-6 bg-white rounded-lg shadow space-y-4"
     >

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PassItOn Widget Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .demo-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #3b82f6;
+        }
+        .inline-widget {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 8px;
+        }
+        code {
+            background: #e4e4e7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 PassItOn Donation Widget Test</h1>
+        
+        <p>This page demonstrates how the PassItOn donation widget works on a real website.</p>
+        
+        <div class="demo-section">
+            <h2>🚀 Floating Widget Demo</h2>
+            <p>Look for the floating donation button in the bottom-right corner of this page. This is how it appears on your website by default.</p>
+        </div>
+        
+        <div class="demo-section">
+            <h2>📍 Inline Widget Demo</h2>
+            <p>You can also place the widget in a specific location on your page:</p>
+            
+            <div class="inline-widget">
+                <h3>Support Our Cause</h3>
+                <p>Your donation helps us make a difference in the community.</p>
+                <!-- This is where an inline widget would appear -->
+                <div id="inline-donate-widget" style="margin: 15px 0;"></div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>💡 How It Works</h2>
+            <ol>
+                <li>Visitor clicks the donation button</li>
+                <li>Secure donation form opens in a modal window</li>
+                <li>Visitor completes donation without leaving your site</li>
+                <li>Thank you message appears and modal closes</li>
+            </ol>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🛠️ Implementation</h2>
+            <p>To add this to your website, you just need to add this code before your closing <code>&lt;/body&gt;</code> tag:</p>
+            <pre style="background: #2d3748; color: #e2e8f0; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>&lt;script&gt;
+  window.PassItOnConfig = {
+    organizationId: 'demo_org_123',
+    defaultAmount: 25,
+    color: '#3b82f6',
+    buttonText: 'Donate Now',
+    position: 'bottom-right'
+  };
+&lt;/script&gt;
+&lt;script src="https://your-domain.com/embed.js"&gt;&lt;/script&gt;</code></pre>
+        </div>
+        
+        <p style="text-align: center; margin-top: 50px; color: #666;">
+            <small>This is a demonstration page. In production, replace the domain and organization ID with your actual values.</small>
+        </p>
+    </div>
+
+    <!-- PassItOn Widget - Floating Button -->
+    <script>
+        window.PassItOnConfig = {
+            organizationId: 'demo_org_123',
+            defaultAmount: 25,
+            color: '#0891B2',
+            buttonText: 'Donate Now',
+            position: 'bottom-right'
+        };
+    </script>
+    <script>
+        // Since we're testing locally, we'll simulate the embed script
+        // In production, this would be: <script src="https://your-domain.com/embed.js"></script>
+        
+        // For demo purposes, let's create a simple version
+        (function() {
+            const widgetHTML = `
+                <div style="
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                ">
+                    <button onclick="alert('In production, this would open the donation form!')" style="
+                        background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+                        color: white;
+                        border: none;
+                        padding: 12px 24px;
+                        border-radius: 25px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                        font-size: 16px;
+                    ">
+                        Donate Now
+                    </button>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', widgetHTML);
+        })();
+        
+        // Inline widget demo
+        window.PassItOnWidget = {
+            init: function(config) {
+                const targetElement = document.getElementById(config.targetElementId);
+                if (targetElement) {
+                    targetElement.innerHTML = `
+                        <button onclick="alert('Inline widget clicked! This would open the donation form.')" style="
+                            background: linear-gradient(135deg, ${config.color || '#3b82f6'}, #8b5cf6);
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 25px;
+                            font-weight: bold;
+                            cursor: pointer;
+                            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                            font-size: 16px;
+                        ">
+                            ${config.buttonText || 'Donate'}
+                        </button>
+                    `;
+                }
+            }
+        };
+        
+        // Initialize inline widget
+        PassItOnWidget.init({
+            targetElementId: 'inline-donate-widget',
+            color: '#10b981',
+            buttonText: 'Support Us'
+        });
+    </script>
+</body>
+</html>

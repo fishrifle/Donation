@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useHeightMonitor } from "@/hooks/useHeightMonitor";
 
 export default function DonationLanding() {
   const [frequency, setFrequency] = useState<"one-time" | "monthly">(
@@ -13,6 +14,9 @@ export default function DonationLanding() {
   const [cause, setCause] = useState("Sponsor a Dev");
   const [coverFee, setCoverFee] = useState(false);
   const router = useRouter();
+  
+  // Monitor height changes and notify parent window
+  const containerRef = useHeightMonitor([frequency, preset, showOtherInput, cause, coverFee]);
 
   const presets = [10, 30, 60, 100, 200] as const;
   const chosenAmount = showOtherInput ? Number(otherAmount) || 0 : preset || 0;
@@ -36,7 +40,7 @@ export default function DonationLanding() {
   };
 
   return (
-    <div className="rounded-2xl shadow-lg p-6 space-y-6 w-full">
+    <div ref={containerRef} className="rounded-2xl shadow-lg p-6 space-y-6 w-full">
       {/* Header */}
       <h2 className="text-2xl font-bold text-center text-blue-800">PassItOn</h2>
 

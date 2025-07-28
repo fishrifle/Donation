@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PassItOn Widget Code Generator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .form-section {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .form-section h3 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-left: 10px;
+            display: inline-block;
+            vertical-align: middle;
+            border: 2px solid #e5e7eb;
+        }
+        
+        .code-section {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .code-section h3 {
+            color: #60a5fa;
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .copy-btn:hover {
+            background: #2563eb;
+        }
+        
+        .preview-section {
+            background: #f0f9ff;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .preview-button {
+            display: inline-block;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .preview-button:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Widget Code Generator</h1>
+            <p>Customize your donation widget and get the embed code</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-grid">
+                <div class="form-section">
+                    <h3>🏢 Organization Settings</h3>
+                    <div class="form-group">
+                        <label for="orgId">Organization ID</label>
+                        <input type="text" id="orgId" placeholder="org_123abc" value="demo_org_123">
+                    </div>
+                    <div class="form-group">
+                        <label for="domain">Your Widget Domain</label>
+                        <input type="text" id="domain" placeholder="https://donate.yoursite.com" value="https://your-domain.com">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>🎨 Appearance</h3>
+                    <div class="form-group">
+                        <label for="buttonText">Button Text</label>
+                        <input type="text" id="buttonText" placeholder="Donate Now" value="Donate Now">
+                    </div>
+                    <div class="form-group">
+                        <label for="color">Button Color</label>
+                        <input type="color" id="color" value="#3b82f6" style="width: auto;">
+                        <span class="color-preview" id="colorPreview"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="position">Position</label>
+                        <select id="position">
+                            <option value="bottom-right">Bottom Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="top-right">Top Right</option>
+                            <option value="top-left">Top Left</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="defaultAmount">Default Amount ($)</label>
+                        <input type="number" id="defaultAmount" placeholder="25" value="25" min="1">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="preview-section">
+                <h3>👀 Preview</h3>
+                <p>This is how your button will look:</p>
+                <br>
+                <button class="preview-button" id="previewButton">Donate Now</button>
+            </div>
+            
+            <div class="code-section">
+                <h3>📋 Your Embed Code</h3>
+                <p>Copy this code and paste it before the closing &lt;/body&gt; tag on your website:</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode()">Copy</button>
+                    <pre id="generatedCode">&lt;!-- PassItOn Donation Widget --&gt;
+&lt;script&gt;
+  window.PassItOnConfig = {
+    organizationId: 'demo_org_123',
+    defaultAmount: 25,
+    color: '#3b82f6',
+    buttonText: 'Donate Now',
+    position: 'bottom-right'
+  };
+&lt;/script&gt;
+&lt;script src="https://your-domain.com/embed.js"&gt;&lt;/script&gt;</pre>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="color: #6b7280; font-size: 14px;">
+                    Need help? Check out our <a href="EMBED_INSTRUCTIONS.md" style="color: #3b82f6;">detailed setup guide</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePreview() {
+            const buttonText = document.getElementById('buttonText').value || 'Donate Now';
+            const color = document.getElementById('color').value;
+            const orgId = document.getElementById('orgId').value || 'demo_org_123';
+            const domain = document.getElementById('domain').value || 'https://your-domain.com';
+            const position = document.getElementById('position').value;
+            const defaultAmount = document.getElementById('defaultAmount').value || 25;
+            
+            // Update preview button
+            const previewButton = document.getElementById('previewButton');
+            previewButton.textContent = buttonText;
+            previewButton.style.background = `linear-gradient(135deg, ${color}, #8b5cf6)`;
+            previewButton.style.color = 'white';
+            
+            // Update color preview
+            document.getElementById('colorPreview').style.backgroundColor = color;
+            
+            // Update generated code
+            const code = `&lt;!-- PassItOn Donation Widget --&gt;
+&lt;script&gt;
+  window.PassItOnConfig = {
+    organizationId: '${orgId}',
+    defaultAmount: ${defaultAmount},
+    color: '${color}',
+    buttonText: '${buttonText}',
+    position: '${position}'
+  };
+&lt;/script&gt;
+&lt;script src="${domain}/embed.js"&gt;&lt;/script&gt;`;
+            
+            document.getElementById('generatedCode').innerHTML = code;
+        }
+        
+        function copyCode() {
+            const codeElement = document.getElementById('generatedCode');
+            const code = codeElement.textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+        
+        // Add event listeners
+        document.getElementById('buttonText').addEventListener('input', updatePreview);
+        document.getElementById('color').addEventListener('input', updatePreview);
+        document.getElementById('orgId').addEventListener('input', updatePreview);
+        document.getElementById('domain').addEventListener('input', updatePreview);
+        document.getElementById('position').addEventListener('change', updatePreview);
+        document.getElementById('defaultAmount').addEventListener('input', updatePreview);
+        
+        // Initialize
+        updatePreview();
+    </script>
+</body>
+</html>

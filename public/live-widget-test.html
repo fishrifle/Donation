@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Widget Test - Real Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 4px solid #3b82f6;
+        }
+        .inline-widget {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 8px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .loading {
+            background: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Live Widget Test - Real Configuration</h1>
+        
+        <div id="config-status" class="status loading">
+            <strong>Loading...</strong> Fetching your widget configuration from dashboard...
+        </div>
+        
+        <div class="test-section">
+            <h2>🎨 Configuration Preview</h2>
+            <div id="config-preview">
+                <p>Loading widget configuration...</p>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🎯 Floating Widget Test</h2>
+            <p>The floating button will appear with your actual styling once configuration loads.</p>
+            <div class="status warning">
+                <strong>⚠️ Important:</strong> After making changes in the dashboard, refresh this page to see the updated widget configuration.
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📍 Inline Widget Test</h2>
+            <p>This widget uses your real configuration:</p>
+            
+            <div class="inline-widget">
+                <h3>Support Our Cause</h3>
+                <p>Your donation helps us make a difference in the community.</p>
+                <div id="inline-donate-widget" style="margin: 15px 0;">
+                    <p>Loading widget...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Widget Loading Script -->
+    <script>
+        // Your actual organization ID from the dashboard
+        const ORGANIZATION_ID = 'e6d72701-8674-4ac6-b39a-ad24fa0d5c31';
+        const ADMIN_API_URL = 'http://localhost:3001'; // Admin dashboard port
+        
+        let widgetConfig = null;
+
+        async function loadWidgetConfig() {
+            try {
+                console.log('Loading widget config for org:', ORGANIZATION_ID);
+                
+                const response = await fetch(`${ADMIN_API_URL}/api/widget-config/${ORGANIZATION_ID}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                widgetConfig = await response.json();
+                console.log('Loaded widget config:', widgetConfig);
+                
+                // Update status
+                document.getElementById('config-status').className = 'status success';
+                document.getElementById('config-status').innerHTML = `
+                    <strong>✅ Configuration Loaded!</strong> 
+                    Using theme: ${widgetConfig.config.theme.fontFamily}, 
+                    Primary: ${widgetConfig.config.theme.primaryColor}
+                `;
+                
+                // Show config preview
+                document.getElementById('config-preview').innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4>🎨 Theme</h4>
+                            <p><strong>Primary Color:</strong> ${widgetConfig.config.theme.primaryColor}</p>
+                            <p><strong>Secondary Color:</strong> ${widgetConfig.config.theme.secondaryColor}</p>
+                            <p><strong>Font:</strong> ${widgetConfig.config.theme.fontFamily}</p>
+                            <p><strong>Border Radius:</strong> ${widgetConfig.config.theme.borderRadius}px</p>
+                        </div>
+                        <div>
+                            <h4>🎯 Causes</h4>
+                            ${widgetConfig.config.causes.length > 0 
+                                ? widgetConfig.config.causes.map(cause => `<p>• ${cause.name}</p>`).join('')
+                                : '<p>No causes configured yet</p>'
+                            }
+                        </div>
+                    </div>
+                `;
+                
+                // Initialize widgets with real config
+                initializeWidgets();
+                
+            } catch (error) {
+                console.error('Error loading widget config:', error);
+                document.getElementById('config-status').className = 'status warning';
+                document.getElementById('config-status').innerHTML = `
+                    <strong>⚠️ Configuration Error:</strong> ${error.message}<br>
+                    <small>Make sure your dashboard is running on ${ADMIN_API_URL}</small>
+                `;
+                
+                // Fallback to default config
+                initializeWidgetsWithDefaults();
+            }
+        }
+
+        function initializeWidgets() {
+            if (!widgetConfig) return;
+            
+            const theme = widgetConfig.config.theme;
+            
+            // Configure floating widget
+            window.PassItOnConfig = {
+                organizationId: ORGANIZATION_ID,
+                defaultAmount: widgetConfig.config.settings.suggestedAmounts[0] / 100 || 25,
+                color: theme.primaryColor,
+                buttonText: 'Donate Now',
+                position: 'bottom-right'
+            };
+            
+            // Load the embed script
+            const script = document.createElement('script');
+            script.src = './embed-local-test.js';
+            document.head.appendChild(script);
+            
+            // Initialize inline widget
+            script.onload = function() {
+                if (window.PassItOnWidget) {
+                    PassItOnWidget.init({
+                        targetElementId: 'inline-donate-widget',
+                        organizationId: ORGANIZATION_ID,
+                        defaultAmount: widgetConfig.config.settings.suggestedAmounts[1] / 100 || 50,
+                        color: theme.secondaryColor,
+                        buttonText: 'Support Us'
+                    });
+                }
+            };
+        }
+
+        function initializeWidgetsWithDefaults() {
+            // Fallback configuration
+            window.PassItOnConfig = {
+                organizationId: 'test_org_123',
+                defaultAmount: 25,
+                color: '#3b82f6',
+                buttonText: 'Donate Now (Default)',
+                position: 'bottom-right'
+            };
+            
+            const script = document.createElement('script');
+            script.src = './embed-local-test.js';
+            document.head.appendChild(script);
+            
+            script.onload = function() {
+                if (window.PassItOnWidget) {
+                    PassItOnWidget.init({
+                        targetElementId: 'inline-donate-widget',
+                        organizationId: 'test_org_456',
+                        defaultAmount: 50,
+                        color: '#10b981',
+                        buttonText: 'Support Us (Default)'
+                    });
+                }
+            };
+        }
+
+        // Load configuration when page loads
+        document.addEventListener('DOMContentLoaded', loadWidgetConfig);
+    </script>
+</body>
+</html>
