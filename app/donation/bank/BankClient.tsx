@@ -131,7 +131,7 @@ function BankForm({
           } else {
             toast.error("Failed to confirm subscription.");
           }
-        } catch (error) {
+        } catch {
           toast.error("Failed to confirm subscription.");
         }
       }

@@ -103,7 +103,12 @@ class WebhookService {
   }
 
   // Helper method to validate webhook payload
-  validatePayload(payload: any): payload is DonationWebhookPayload {
+  validatePayload(payload: unknown): payload is DonationWebhookPayload {
+    if (typeof payload !== 'object' || payload === null) {
+      console.error('Payload must be an object');
+      return false;
+    }
+
     const required = [
       'organizationId', 'widgetId', 'donationId', 'amount', 
       'currency', 'frequency', 'cause', 'donor', 'paymentMethod',
@@ -117,23 +122,26 @@ class WebhookService {
       }
     }
 
+    // Cast to any for property access after object type check
+    const typedPayload = payload as any;
+
     // Validate specific field types
-    if (typeof payload.amount !== 'number' || payload.amount <= 0) {
+    if (typeof typedPayload.amount !== 'number' || typedPayload.amount <= 0) {
       console.error('Invalid amount');
       return false;
     }
 
-    if (!['one-time', 'monthly'].includes(payload.frequency)) {
+    if (!['one-time', 'monthly'].includes(typedPayload.frequency)) {
       console.error('Invalid frequency');
       return false;
     }
 
-    if (!['card', 'bank'].includes(payload.paymentMethod)) {
+    if (!['card', 'bank'].includes(typedPayload.paymentMethod)) {
       console.error('Invalid payment method');
       return false;
     }
 
-    if (!['processing', 'succeeded', 'failed'].includes(payload.status)) {
+    if (!['processing', 'succeeded', 'failed'].includes(typedPayload.status)) {
       console.error('Invalid status');
       return false;
     }
