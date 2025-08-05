@@ -16,14 +16,14 @@ Copy and paste this code into your website's HTML, right before the closing `</b
 <!-- PassItOn Donation Widget -->
 <script>
   window.PassItOnConfig = {
-    organizationId: 'YOUR_ORG_ID_HERE',    // Replace with your organization ID
+    organizationId: 'eaa7b95c-91fa-4d7a-a786-e54571f928a5',    // Replace with your organization ID
     defaultAmount: 25,                      // Default donation amount in dollars
     color: '#3b82f6',                      // Button color (hex code)
     buttonText: 'Donate Now',              // Text on the donation button
     position: 'bottom-right'               // Where to show the button
   };
 </script>
-<script src="https://YOUR_DOMAIN_HERE/embed.js"></script>
+<script src="https://https://donation-one-phi.vercel.app//embed.js"></script>
 ```
 
 ### Step 2: Customize Your Settings

@@ -32,7 +32,7 @@ export default function DonationLanding() {
   const chosenAmount = showOtherInput ? Number(otherAmount) || 0 : preset || 0;
   const canProceed = chosenAmount > 0;
 
-  const navigate = () => {
+  const navigate = (method: "card" | "bank") => {
     if (!canProceed) return;
     
     const queryParams = new URLSearchParams({
@@ -45,7 +45,7 @@ export default function DonationLanding() {
       coverFee: coverFee.toString()
     });
     
-    router.push(`/donation/card?${queryParams.toString()}`);
+    router.push(`/donation/${method}?${queryParams.toString()}`);
   };
 
   const handleOtherChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -224,18 +224,31 @@ export default function DonationLanding() {
         </label>
       </div>
 
-      {/* Continue Button */}
-      <button
-        onClick={navigate}
-        disabled={!canProceed}
-        className={`w-full py-2 px-4 text-xs rounded font-medium transition-colors ${
-          canProceed
-            ? "bg-blue-500 hover:bg-blue-600 text-white"
-            : "bg-gray-300 text-gray-500 cursor-not-allowed"
-        }`}
-      >
-        Continue
-      </button>
+      {/* Payment Buttons */}
+      <div className="flex gap-2">
+        <button
+          onClick={() => navigate("card")}
+          disabled={!canProceed}
+          className={`flex-1 py-2 px-3 text-xs rounded font-medium transition-colors ${
+            canProceed
+              ? "bg-blue-600 hover:bg-blue-700 text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+        >
+          Pay with Card
+        </button>
+        <button
+          onClick={() => navigate("bank")}
+          disabled={!canProceed}
+          className={`flex-1 py-2 px-3 text-xs rounded font-medium transition-colors ${
+            canProceed
+              ? "bg-purple-500 hover:bg-purple-600 text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
+        >
+          Pay via Bank
+        </button>
+      </div>
 
       {/* Copyright */}
       <div className="text-center pt-2 border-t border-gray-100">
